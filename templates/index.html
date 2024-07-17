@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Species Prediction</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fish Species Prediction</h2>
+        <form id="fishForm">
+            <label for="weight">Weight (g):</label>
+            <input type="text" id="weight" name="weight" required><br><br>
+            <label for="length1">Length1 (cm):</label>
+            <input type="text" id="length1" name="length1" required><br><br>
+            <label for="length2">Length2 (cm):</label>
+            <input type="text" id="length2" name="length2" required><br><br>
+            <label for="length3">Length3 (cm):</label>
+            <input type="text" id="length3" name="length3" required><br><br>
+            <label for="height">Height (cm):</label>
+            <input type="text" id="height" name="height" required><br><br>
+            <label for="width">Width (cm):</label>
+            <input type="text" id="width" name="width" required><br><br>
+            <button type="submit">Predict Species</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('fishForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const jsonData = {
+                'Weight': formData.get('weight'),
+                'Length1': formData.get('length1'),
+                'Length2': formData.get('length2'),
+                'Length3': formData.get('length3'),
+                'Height': formData.get('height'),
+                'Width': formData.get('width')
+            };
+            
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = `Predicted Species: ${data.prediction}`;
+        });
+    </script>
+</body>
+</html>
